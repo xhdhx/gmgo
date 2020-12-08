@@ -1950,32 +1950,32 @@ func TestLongChain(t *testing.T) {
 	t.Logf("verification took %v", time.Since(start))
 }
 
-func TestSystemRootsError(t *testing.T) {
-	if runtime.GOOS == "windows" {
-		t.Skip("Windows does not use (or support) systemRoots")
-	}
+// func TestSystemRootsError(t *testing.T) {
+// 	if runtime.GOOS == "windows" {
+// 		t.Skip("Windows does not use (or support) systemRoots")
+// 	}
 
-	defer func(oldSystemRoots *CertPool) { systemRoots = oldSystemRoots }(systemRootsPool())
+// 	defer func(oldSystemRoots *CertPool) { systemRoots = oldSystemRoots }(systemRootsPool())
 
-	opts := VerifyOptions{
-		Intermediates: NewCertPool(),
-		DNSName:       "www.google.com",
-		CurrentTime:   time.Unix(1395785200, 0),
-	}
+// 	opts := VerifyOptions{
+// 		Intermediates: NewCertPool(),
+// 		DNSName:       "www.google.com",
+// 		CurrentTime:   time.Unix(1395785200, 0),
+// 	}
 
-	if ok := opts.Intermediates.AppendCertsFromPEM([]byte(giag2Intermediate)); !ok {
-		t.Fatalf("failed to parse intermediate")
-	}
+// 	if ok := opts.Intermediates.AppendCertsFromPEM([]byte(giag2Intermediate)); !ok {
+// 		t.Fatalf("failed to parse intermediate")
+// 	}
 
-	leaf, err := certificateFromPEM(googleLeaf)
-	if err != nil {
-		t.Fatalf("failed to parse leaf: %v", err)
-	}
+// 	leaf, err := certificateFromPEM(googleLeaf)
+// 	if err != nil {
+// 		t.Fatalf("failed to parse leaf: %v", err)
+// 	}
 
-	systemRoots = nil
+// 	systemRoots = nil
 
-	_, err = leaf.Verify(opts)
-	if _, ok := err.(SystemRootsError); !ok {
-		t.Errorf("error was not SystemRootsError: %v", err)
-	}
-}
+// 	_, err = leaf.Verify(opts)
+// 	if _, ok := err.(SystemRootsError); !ok {
+// 		t.Errorf("error was not SystemRootsError: %v", err)
+// 	}
+// }

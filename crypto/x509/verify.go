@@ -12,7 +12,6 @@ import (
 	"net/url"
 	"os"
 	"reflect"
-	"runtime"
 	"strings"
 	"time"
 	"unicode/utf8"
@@ -767,16 +766,20 @@ func (c *Certificate) Verify(opts VerifyOptions) (chains [][]*Certificate, err e
 		}
 	}
 
-	// Use Windows's own verification and chain building.
-	if opts.Roots == nil && runtime.GOOS == "windows" {
-		return c.systemVerify(&opts)
-	}
+	// // Use Windows's own verification and chain building.
+	// if opts.Roots == nil && runtime.GOOS == "windows" {
+	// 	return c.systemVerify(&opts)
+	// }
 
+	// if opts.Roots == nil {
+	// 	opts.Roots = systemRootsPool()
+	// 	if opts.Roots == nil {
+	// 		return nil, SystemRootsError{systemRootsErr}
+	// 	}
+	// }
+	//
 	if opts.Roots == nil {
-		opts.Roots = systemRootsPool()
-		if opts.Roots == nil {
-			return nil, SystemRootsError{systemRootsErr}
-		}
+		return nil, errors.New("x509: missing root certification")
 	}
 
 	err = c.isValid(leafCertificate, nil, &opts)
